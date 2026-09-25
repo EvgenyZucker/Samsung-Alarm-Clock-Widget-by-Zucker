@@ -1,5 +1,11 @@
 # Samsung Alarm Clock Widget by Zucker
 
+[![Download APK](https://img.shields.io/badge/Download-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest/download/Samsung-Alarm-Clock-Widget-by-Zucker-v1.0-optimized.apk)
+[![Latest release](https://img.shields.io/github/v/release/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker?style=for-the-badge&label=Latest%20release)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest)
+
+> [!IMPORTANT]
+> After installing the APK, two system permissions must be granted once through ADB. Root is not required, and the permissions survive normal phone restarts. Follow the [detailed installation and setup instructions](#detailed-installation-and-setup) below.
+
 This application was developed for personal use because I could not find a single widget that displayed the actual next Samsung alarm correctly without that alarm being overridden by system events, Modes and Routines, calendar events, or other scheduled Android activities.
 
 The project is based on the appearance and functionality of **Digital Clock Widget** by **Maize / EZI Studio Inc.** (`com.maize.digitalClock`, version 6.2.1), available as “Digital Clock Widget” in One UI. This application closely recreates its layout, customization options, and general user experience while using an entirely different algorithm to determine the next alarm.
