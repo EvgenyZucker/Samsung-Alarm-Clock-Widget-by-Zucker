@@ -23,6 +23,8 @@ reference/
 releases/
 
 # Signing material and generated packages
+keystore.properties
+keystore.properties.txt
 *.jks
 *.keystore
 *.apk

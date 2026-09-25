@@ -2,6 +2,16 @@ plugins {
     id 'com.android.application'
 }
 
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+def releaseTaskRequested = gradle.startParameter.taskNames.any {
+    it.toLowerCase(Locale.ROOT).contains('release')
+}
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace 'dev.local.samsungalarmwidget'
     compileSdk 36
@@ -14,15 +24,31 @@ android {
         applicationId 'dev.local.samsungalarmwidget'
         minSdk 26
         targetSdk 36
-        versionCode 100
-        versionName '1.0'
+        versionCode 101
+        versionName '1.1'
+    }
+
+    signingConfigs {
+        release {
+            if (!keystorePropertiesFile.exists() && releaseTaskRequested) {
+                throw new GradleException('Missing keystore.properties for release signing')
+            }
+            if (keystorePropertiesFile.exists()) {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
-            signingConfig signingConfigs.debug
+            if (keystorePropertiesFile.exists()) {
+                signingConfig signingConfigs.release
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

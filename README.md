@@ -1,7 +1,9 @@
 # Samsung Alarm Clock Widget by Zucker
 
-[![Download APK](https://img.shields.io/badge/Download-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest/download/Samsung-Alarm-Clock-Widget-by-Zucker-v1.0-optimized.apk)
+[![Download APK](https://img.shields.io/badge/Download-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest/download/Samsung-Alarm-Clock-Widget-by-Zucker-v1.1.apk)
 [![Latest release](https://img.shields.io/github/v/release/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker?style=for-the-badge&label=Latest%20release)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest)
+
+[Changelog](CHANGELOG.md)
 
 > [!IMPORTANT]
 > After installing the APK, two system permissions must be granted once through ADB. Root is not required, and the permissions survive normal phone restarts. Follow the [detailed installation and setup instructions](#detailed-installation-and-setup) below.
@@ -30,7 +32,7 @@ Unlike widgets that rely only on Android's standard `getNextAlarmClock()` result
 
 ## Tested device
 
-Version 1.0 has been developed and tested on:
+Version 1.1 has been developed and tested on:
 
 - **Device:** Samsung Galaxy S25 FE
 - **Software:** Samsung One UI 8.5
@@ -157,6 +159,9 @@ After this initial setup, the computer is no longer required. The permissions su
 
 Install a new APK over the existing application. Do not uninstall the old version first. Updating in place preserves the ADB permissions; uninstalling the application removes them and requires the setup commands to be run again.
 
+> [!WARNING]
+> Version 1.0 was distributed with a temporary debug signature. To migrate from public version 1.0 to version 1.1, uninstall version 1.0 once, install version 1.1, and grant the ADB permissions again. Starting with version 1.1, releases use a permanent production signing key and future updates can be installed in place.
+
 ## Compatibility
 
 The application is designed specifically for Samsung devices using the standard **Samsung Clock** application:
@@ -191,7 +196,7 @@ The project requires Android SDK 36 and a compatible JDK. To create an optimized
 
 The APK is generated at `app/build/outputs/apk/release/app-release.apk`.
 
-> The current release configuration uses a debug signing key and is intended for test installation. Configure a dedicated production signing key before long-term distribution.
+> Release builds require a private `keystore.properties` file and are signed with the project's permanent production key. The signing key and passwords are intentionally excluded from this repository.
 
 ## Disclaimer
 
