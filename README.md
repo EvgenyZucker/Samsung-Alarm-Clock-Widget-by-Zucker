@@ -14,6 +14,24 @@ The project is based on the appearance and functionality of **Digital Clock Widg
 
 Unlike widgets that rely only on Android's standard `getNextAlarmClock()` result, this widget analyzes Samsung Clock alarm data and filters out unrelated scheduled system events. This makes it possible to display the actual next alarm created in Samsung Clock, even when Samsung Modes and Routines or other Android services have scheduled earlier events.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/widget-home-screen.png" width="220" alt="Widget displaying the current time and next Samsung Clock alarm on the One UI home screen">
+  &nbsp;
+  <img src="docs/screenshots/widget-reconfigure-menu.png" width="220" alt="One UI widget menu with the option to reopen the widget settings">
+  &nbsp;
+  <img src="docs/screenshots/settings-overview.png" width="220" alt="Main widget appearance and behavior settings">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/font-selection.png" width="220" alt="Widget font selection dialog">
+  &nbsp;
+  <img src="docs/screenshots/text-alignment.png" width="220" alt="Widget text alignment selection dialog">
+</p>
+
+<p align="center"><sub>Samsung Galaxy S25 FE running One UI 8.5. Interface language follows the device settings.</sub></p>
+
 ## Features
 
 - Displays the current time and date.
