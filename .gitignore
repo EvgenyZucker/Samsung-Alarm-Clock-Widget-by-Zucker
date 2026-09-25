@@ -1,0 +1,33 @@
+# Gradle and Android build state
+.gradle/
+.gradle-user/
+.android-user/
+build/
+app/build/
+**/build/
+
+# IDE files
+.idea/
+*.iml
+
+# Machine-local Android SDK configuration
+local.properties
+
+# Temporary project artifacts
+work/
+
+# Local design and comparison references
+reference/
+
+# Preserved APK backups and checksums are kept locally, not in source control
+releases/
+
+# Signing material and generated packages
+*.jks
+*.keystore
+*.apk
+*.aab
+
+# Common OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/widget_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/widget_description" />
+    <TextClock
+        android:id="@+id/widget_clock"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:translationY="-9dp"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:fontFamily="source-sans-pro"
+        android:gravity="top|center_horizontal" />
+</FrameLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Samsung Alarm Clock Widget by Zucker</string>
+    <string name="widget_description">Настраиваемые цифровые часы с настоящим будильником Samsung</string>
+    <string name="developer_name">EvgenyZucker</string>
+</resources>

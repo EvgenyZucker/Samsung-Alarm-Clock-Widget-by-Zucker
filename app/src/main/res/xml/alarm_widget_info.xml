@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="320dp"
+    android:minHeight="64dp"
+    android:minResizeWidth="120dp"
+    android:minResizeHeight="36dp"
+    android:updatePeriodMillis="0"
+    android:initialLayout="@layout/alarm_widget"
+    android:configure="dev.local.samsungalarmwidget.MainActivity"
+    android:widgetFeatures="reconfigurable|configuration_optional"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen|keyguard"
+    android:description="@string/widget_description" />
