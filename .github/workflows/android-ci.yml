@@ -36,7 +36,14 @@ jobs:
           cache-read-only: ${{ github.event_name == 'pull_request' }}
 
       - name: Install required Android SDK packages
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+        shell: bash
+        run: |
+          sdkmanager_path="$(find "$ANDROID_HOME/cmdline-tools" -type f -path '*/bin/sdkmanager' | sort -V | tail -n 1)"
+          if [[ -z "$sdkmanager_path" ]]; then
+            echo "sdkmanager was not found under ANDROID_HOME=$ANDROID_HOME"
+            exit 1
+          fi
+          "$sdkmanager_path" "platforms;android-36" "build-tools;36.0.0"
 
       - name: Verify signing material is not tracked
         shell: bash
