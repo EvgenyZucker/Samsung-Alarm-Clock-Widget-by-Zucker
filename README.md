@@ -33,12 +33,20 @@ Unlike widgets that rely only on Android's standard `getNextAlarmClock()` result
 
 <p align="center"><sub>Samsung Galaxy S25 FE running One UI 8.5. Interface language follows the device settings.</sub></p>
 
+## Requirements
+
+- A Samsung device running Android 8.0 or newer.
+- The standard Samsung Clock application (`com.sec.android.app.clockpackage`).
+- A computer for the one-time ADB permission setup. Root and Shizuku are not required.
+
+After the initial setup, the widget works without a connected computer or an internet connection.
+
 ## Features
 
 - Displays the current time and date.
 - Displays the actual next alarm from Samsung Clock.
 - Filters out unrelated system events and Modes and Routines schedules.
-- Automatically updates when the alarm changes.
+- Automatically updates after alarm changes. With the screen on, allow up to about two minutes because Android may batch background work. Checks are deferred while the screen is off and resume immediately after the screen wakes.
 - Continues working after the phone is restarted.
 - Opens Samsung Clock or another selected application when the widget is tapped.
 - Supports configurable time and date formats.
@@ -55,11 +63,11 @@ Unlike widgets that rely only on Android's standard `getNextAlarmClock()` result
 
 ## Tested devices
 
-The current development build has been tested on:
+Version 1.2.0 has been tested on:
 
-| Device | One UI | Samsung Clock | Result | Notes |
-|---|---|---|---|---|
-| Samsung Galaxy S25 FE | 8.5 | `com.sec.android.app.clockpackage` | Fully verified | Development device; Russian and English UI, themed icon and in-place updates tested |
+| Device | Android | One UI | Samsung Clock package | Samsung Clock version | Result | Notes |
+|---|---|---|---|---|---|---|
+| Samsung Galaxy S25 FE | Not recorded | 8.5 | `com.sec.android.app.clockpackage` | Not recorded | Fully verified | Russian and English UI, themed icon and in-place update from 1.1 to 1.2.0 tested |
 
 The application targets Android SDK 36. Testing on other Samsung devices and One UI versions is welcome.
 
@@ -192,7 +200,7 @@ Disconnect the phone from the computer and open **Samsung Alarm Clock Widget by 
 3. Find **Samsung Alarm Clock Widget by Zucker**.
 4. Add the widget to the home screen.
 5. Configure its appearance and tap action.
-6. Create or change an alarm in Samsung Clock and allow the widget a few minutes to refresh.
+6. Create or change an alarm in Samsung Clock. With the screen on, allow up to about two minutes for the widget to refresh. If the screen is off, the check is deferred and runs immediately after the screen wakes.
 
 After this initial setup, the computer is no longer required. The permissions survive normal phone restarts.
 
@@ -260,7 +268,7 @@ Samsung Secure Folder and other protected profiles may use a secondary Android u
 1. Confirm that an enabled future alarm exists in Samsung Clock.
 2. Check the permissions inside the application.
 3. Open Samsung Clock, change the alarm by one minute and save it.
-4. Wait for the widget refresh or reconfigure the widget once.
+4. Keep the screen on and wait up to about two minutes. Android may batch the one-minute non-wakeup fallback check. If the screen was off, wake it to trigger the deferred check.
 5. Confirm that the alarm belongs to Samsung Clock rather than a third-party clock application.
 
 The widget keeps the last valid alarm value when a temporary permission or diagnostic error occurs. This prevents a transient failure from immediately clearing a correct alarm.
