@@ -1,10 +1,12 @@
 # Samsung Alarm Clock Widget by Zucker
 
+> **Русскоязычным пользователям:** [открыть полную документацию на русском языке](README.ru.md)
+
 [![Download APK](https://img.shields.io/badge/Download-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest/download/Samsung-Alarm-Clock-Widget-by-Zucker-v1.2.0.apk)
 [![Latest release: v1.2.0](https://img.shields.io/badge/Latest%20release-v1.2.0-0969DA?style=for-the-badge)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/tag/v1.2.0)
 [![Android CI](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml/badge.svg)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml)
 
-[Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Support](#support-and-feedback)
+[Русская документация](README.ru.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Support](#support-and-feedback)
 
 > [!IMPORTANT]
 > After installing the APK, two system permissions must be granted once through ADB. Root is not required, and the permissions survive normal phone restarts. Follow the [detailed installation and setup instructions](#detailed-installation-and-setup) below.
