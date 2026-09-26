@@ -24,6 +24,10 @@ final class AlarmStateCache {
     }
 
     void put(Long triggerMillis) {
+        if (hasValue()) {
+            Long current = get();
+            if (current == null ? triggerMillis == null : current.equals(triggerMillis)) return;
+        }
         SharedPreferences.Editor editor = preferences.edit().putBoolean(KEY_CACHED, true);
         if (triggerMillis == null) editor.remove(KEY_TRIGGER);
         else editor.putLong(KEY_TRIGGER, triggerMillis);

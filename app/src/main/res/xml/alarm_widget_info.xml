@@ -6,6 +6,7 @@
     android:minResizeHeight="36dp"
     android:updatePeriodMillis="0"
     android:initialLayout="@layout/alarm_widget"
+    android:previewLayout="@layout/alarm_widget_preview"
     android:configure="dev.local.samsungalarmwidget.MainActivity"
     android:widgetFeatures="reconfigurable|configuration_optional"
     android:resizeMode="horizontal|vertical"

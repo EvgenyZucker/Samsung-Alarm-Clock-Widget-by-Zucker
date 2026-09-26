@@ -1,0 +1,133 @@
+name: Compatibility report
+description: Report successful, partial, or failed operation on a Samsung device
+title: "[Compatibility]: "
+labels:
+  - compatibility
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Compatibility reports help document which Samsung devices and One UI versions work correctly. Reports of successful operation are welcome.
+
+        Do not include device serial numbers, personal alarm labels, passwords, signing files, or unrelated system diagnostic output.
+
+  - type: dropdown
+    id: result
+    attributes:
+      label: Overall result
+      options:
+        - Fully working
+        - Partially working
+        - Not working
+    validations:
+      required: true
+
+  - type: input
+    id: device_model
+    attributes:
+      label: Samsung device model
+      placeholder: Samsung Galaxy S25 FE / SM-S731B
+    validations:
+      required: true
+
+  - type: input
+    id: android_version
+    attributes:
+      label: Android version
+      placeholder: Android version shown in Settings
+    validations:
+      required: true
+
+  - type: input
+    id: one_ui_version
+    attributes:
+      label: One UI version
+      placeholder: One UI 8.5
+    validations:
+      required: true
+
+  - type: input
+    id: clock_version
+    attributes:
+      label: Samsung Clock version
+      placeholder: Version number, if available
+    validations:
+      required: true
+
+  - type: input
+    id: app_version
+    attributes:
+      label: Application version
+      placeholder: "1.2.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation_type
+    attributes:
+      label: Installation type
+      options:
+        - Fresh installation
+        - Updated over version 1.1 or newer
+        - Migrated from version 1.0 after uninstalling it
+    validations:
+      required: true
+
+  - type: dropdown
+    id: dump_permission
+    attributes:
+      label: DUMP permission status
+      options:
+        - Granted
+        - Not granted
+        - Unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: usage_permission
+    attributes:
+      label: Usage access status
+      options:
+        - Granted
+        - Not granted
+        - Unknown
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: behavior
+    attributes:
+      label: Verified behavior
+      description: Select every item you tested successfully.
+      options:
+        - label: The correct next Samsung Clock alarm is displayed.
+        - label: Modes and Routines or unrelated scheduled events do not replace the real alarm.
+        - label: Repeating alarms scheduled several days ahead work correctly.
+        - label: The widget updates after changing an alarm.
+        - label: The widget continues working after restarting the phone.
+        - label: Widget settings and ADB permissions survive an in-place application update.
+        - label: Tapping the widget opens Samsung Clock.
+        - label: Widget resizing and reconfiguration work in One UI Home.
+        - label: The adaptive and themed launcher icons display correctly.
+        - label: The English and Russian interfaces display correctly.
+
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Problems or limitations
+      description: Describe anything that did not work or behaved differently from the README.
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional notes or screenshots
+      description: Remove serial numbers, private alarm labels, and unrelated personal information before attaching anything.
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I removed device serial numbers, passwords, signing material, private alarm labels, and other personal information.
+          required: true

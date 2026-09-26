@@ -1,0 +1,58 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint, test and build debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' }}
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install required Android SDK packages
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Verify signing material is not tracked
+        shell: bash
+        run: |
+          tracked="$(git ls-files 'keystore.properties' 'keystore.properties.txt' '*.jks' '*.keystore' '*.p12' '*.pfx')"
+          if [[ -n "$tracked" ]]; then
+            echo "Signing material must not be committed:"
+            echo "$tracked"
+            exit 1
+          fi
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Run lint, unit tests and debug build
+        run: ./gradlew --no-daemon --stacktrace lintDebug testDebugUnitTest assembleDebug

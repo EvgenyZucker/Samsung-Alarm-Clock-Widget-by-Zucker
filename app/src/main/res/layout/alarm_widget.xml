@@ -17,7 +17,6 @@
         android:paddingEnd="8dp"
         android:paddingTop="0dp"
         android:paddingBottom="0dp"
-        android:translationY="-9dp"
         android:includeFontPadding="false"
         android:singleLine="true"
         android:fontFamily="source-sans-pro"

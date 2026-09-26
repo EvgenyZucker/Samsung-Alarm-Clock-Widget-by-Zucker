@@ -18,7 +18,7 @@ import java.util.List;
 final class PickerAdapters {
     private static final int TEXT = 0xFFF2F0F4;
     private static final int SUB = 0xFFC8C5CD;
-    private static final int BLUE = 0xFF4F86F7;
+    private static final int BLUE = 0xFF5289FA;
 
     private PickerAdapters() {}
 
@@ -58,9 +58,11 @@ final class PickerAdapters {
             LinearLayout root = new LinearLayout(context);
             root.setGravity(Gravity.CENTER_VERTICAL);
             root.setPadding(dp(20), dp(8), dp(20), dp(8));
+            root.setMinimumHeight(dp(64));
             TextView dot = text("●", 18, SUB);
             dot.setGravity(Gravity.CENTER);
-            root.addView(dot, new LinearLayout.LayoutParams(dp(36), dp(64)));
+            dot.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            root.addView(dot, new LinearLayout.LayoutParams(dp(36), ViewGroup.LayoutParams.WRAP_CONTENT));
             LinearLayout labels = new LinearLayout(context);
             labels.setOrientation(LinearLayout.VERTICAL);
             labels.setBackgroundColor(Color.TRANSPARENT);
@@ -71,6 +73,7 @@ final class PickerAdapters {
             labels.addView(offset);
             root.addView(labels, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             TextView check = text("✓", 24, BLUE);
+            check.setContentDescription(context.getString(R.string.selected));
             root.addView(check);
             return new TimezoneHolder(root, name, offset, check);
         }
@@ -138,12 +141,12 @@ final class PickerAdapters {
             if (!shortcuts && position == 0) {
                 holder.icon.setImageResource(R.drawable.ic_outline_block);
                 holder.icon.setColorFilter(SUB);
-                holder.label.setText("Ничего не делать");
+                holder.label.setText(R.string.do_nothing);
             } else if (!shortcuts && position == 1) {
                 Drawable clockIcon = cachedClockIcon(position);
                 if (clockIcon != null) holder.icon.setImageDrawable(clockIcon);
                 else holder.icon.setImageResource(R.drawable.ic_outline_alarm);
-                holder.label.setText("Перейти сюда");
+                holder.label.setText(R.string.open_clock);
             } else {
                 ResolveInfo info = getItem(position);
                 holder.icon.setImageDrawable(cachedIcon(position, info));
@@ -188,7 +191,9 @@ final class PickerAdapters {
             LinearLayout root = new LinearLayout(context);
             root.setGravity(Gravity.CENTER_VERTICAL);
             root.setPadding(dp(16), 0, dp(16), 0);
+            root.setMinimumHeight(dp(64));
             ImageView icon = new ImageView(context);
+            icon.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
             LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(dp(40), dp(40));
             iconParams.setMarginEnd(dp(16));
             root.addView(icon, iconParams);
@@ -196,7 +201,8 @@ final class PickerAdapters {
             label.setTextSize(16);
             label.setTextColor(TEXT);
             label.setGravity(Gravity.CENTER_VERTICAL);
-            root.addView(label, new LinearLayout.LayoutParams(0, dp(64), 1));
+            label.setPadding(0, dp(8), 0, dp(8));
+            root.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             return new AppHolder(root, icon, label);
         }
 

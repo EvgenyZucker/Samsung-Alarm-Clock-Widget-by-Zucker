@@ -5,8 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 final class SettingsViews {
     private SettingsViews() {}
@@ -19,15 +24,33 @@ final class SettingsViews {
             super(context);
             this.checked = checked;
             setClickable(true);
+            setFocusable(true);
+            updateAccessibilityState();
         }
 
         void toggle() {
             checked = !checked;
+            updateAccessibilityState();
+            sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
             invalidate();
         }
 
         boolean isChecked() {
             return checked;
+        }
+
+        private void updateAccessibilityState() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                setStateDescription(getContext().getString(checked
+                        ? R.string.switch_on : R.string.switch_off));
+            }
+        }
+
+        @Override public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
+            super.onInitializeAccessibilityNodeInfo(info);
+            info.setClassName("android.widget.Switch");
+            info.setCheckable(true);
+            info.setChecked(checked);
         }
 
         @Override protected void onDraw(Canvas canvas) {
@@ -56,6 +79,8 @@ final class SettingsViews {
             selected = Math.max(0, Math.min((MAX - MIN) / STEP,
                     Math.round((value - MIN) / (float) STEP)));
             setClickable(true);
+            setFocusable(true);
+            updateAccessibilityState();
         }
 
         @Override protected void onDraw(Canvas canvas) {
@@ -67,14 +92,14 @@ final class SettingsViews {
             paint.setStrokeWidth(dp(4));
             paint.setColor(0xFF66666C);
             canvas.drawLine(left, centerY, right, centerY, paint);
-            paint.setColor(0xFF4F86F7);
+            paint.setColor(0xFF5289FA);
             canvas.drawLine(left, centerY, x, centerY, paint);
             for (int i = 0; i <= (MAX - MIN) / STEP; i++) {
                 float tickX = left + (right - left) * i / ((MAX - MIN) / (float) STEP);
                 paint.setColor(0xFFF2F0F4);
                 canvas.drawCircle(tickX, centerY, dp(2), paint);
             }
-            paint.setColor(0xFF4F86F7);
+            paint.setColor(0xFF5289FA);
             canvas.drawRoundRect(x - dp(2), centerY - dp(23), x + dp(2), centerY + dp(23),
                     dp(2), dp(2), paint);
         }
@@ -89,8 +114,59 @@ final class SettingsViews {
             float right = getWidth() - dp(4);
             selected = Math.max(0, Math.min((MAX - MIN) / STEP,
                     Math.round((event.getX() - left) / (right - left) * ((MAX - MIN) / STEP))));
+            updateAccessibilityState();
+            if (action == MotionEvent.ACTION_UP) {
+                sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
+                performClick();
+            }
             invalidate();
             return true;
+        }
+
+        @Override public boolean performClick() {
+            super.performClick();
+            return true;
+        }
+
+        @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                return changeBy(-1);
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                return changeBy(1);
+            }
+            return super.onKeyDown(keyCode, event);
+        }
+
+        @Override public boolean performAccessibilityAction(int action, Bundle arguments) {
+            if (action == AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) return changeBy(1);
+            if (action == AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD) return changeBy(-1);
+            return super.performAccessibilityAction(action, arguments);
+        }
+
+        @Override public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
+            super.onInitializeAccessibilityNodeInfo(info);
+            info.setClassName("android.widget.SeekBar");
+            info.setRangeInfo(AccessibilityNodeInfo.RangeInfo.obtain(
+                    AccessibilityNodeInfo.RangeInfo.RANGE_TYPE_INT, MIN, MAX, value()));
+            info.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD);
+            info.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_BACKWARD);
+        }
+
+        private boolean changeBy(int amount) {
+            int next = Math.max(0, Math.min((MAX - MIN) / STEP, selected + amount));
+            if (next == selected) return false;
+            selected = next;
+            updateAccessibilityState();
+            sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
+            invalidate();
+            return true;
+        }
+
+        private void updateAccessibilityState() {
+            String value = getContext().getString(R.string.slider_value, value());
+            setContentDescription(value);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) setStateDescription(value);
         }
 
         int value() {

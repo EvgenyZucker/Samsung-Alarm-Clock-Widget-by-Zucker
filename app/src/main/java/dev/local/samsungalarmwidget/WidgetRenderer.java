@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +18,7 @@ import java.util.TimeZone;
 
 final class WidgetRenderer {
     private static final int MAX_FIT_CACHE_ENTRIES = 48;
+    private static final int MAX_FRAME_CACHE_ENTRIES = 12;
     private static final Map<String, Float> FIT_CACHE =
             new LinkedHashMap<String, Float>(MAX_FIT_CACHE_ENTRIES, .75f, true) {
                 @Override protected boolean removeEldestEntry(Map.Entry<String, Float> eldest) {
@@ -25,13 +26,20 @@ final class WidgetRenderer {
                 }
             };
     private static final Map<String, Typeface> TYPEFACE_CACHE = new LinkedHashMap<>();
+    private static final Map<String, WidgetFrame> FRAME_CACHE =
+            new LinkedHashMap<String, WidgetFrame>(MAX_FRAME_CACHE_ENTRIES, .75f, true) {
+                @Override protected boolean removeEldestEntry(
+                        Map.Entry<String, WidgetFrame> eldest) {
+                    return size() > MAX_FRAME_CACHE_ENTRIES;
+                }
+            };
 
     private WidgetRenderer() {}
 
     static final class WidgetFrame {
         final Bitmap bitmap;
         final float timeSizeDp;
-        final float timeTopDp;
+        final float timeTranslationDp;
         final int timeColor;
         final int alignment;
         final boolean showTime;
@@ -41,12 +49,13 @@ final class WidgetRenderer {
         final String date;
         final String alarm;
 
-        WidgetFrame(Bitmap bitmap, float timeSizeDp, float timeTopDp, int timeColor, int alignment,
+        WidgetFrame(Bitmap bitmap, float timeSizeDp, float timeTranslationDp,
+                    int timeColor, int alignment,
                     boolean showTime, String timeFormat, String timeZone,
                     float secondarySizeDp, String date, String alarm) {
             this.bitmap = bitmap;
             this.timeSizeDp = timeSizeDp;
-            this.timeTopDp = timeTopDp;
+            this.timeTranslationDp = timeTranslationDp;
             this.timeColor = timeColor;
             this.alignment = alignment;
             this.showTime = showTime;
@@ -70,7 +79,27 @@ final class WidgetRenderer {
 
     static WidgetFrame renderWidget(Context context, int widthDp, int heightDp, Long alarmMillis,
                                     WidgetSettings.Snapshot settings) {
-        return renderInternal(context, widthDp, heightDp, alarmMillis, false, settings);
+        TimeZone zone = "auto".equals(settings.timezone)
+                ? TimeZone.getDefault() : TimeZone.getTimeZone(settings.timezone);
+        Date now = new Date();
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd", Locale.US);
+        dayFormat.setTimeZone(zone);
+        String key = widthDp + "x" + heightDp + '|'
+                + Float.floatToIntBits(Math.min(2f,
+                context.getResources().getDisplayMetrics().density)) + '|'
+                + settings.renderKey() + '|' + (alarmMillis == null ? "none" : alarmMillis)
+                + '|' + dayFormat.format(now) + '|' + zone.getOffset(now.getTime())
+                + '|' + Locale.getDefault().toLanguageTag();
+        synchronized (FRAME_CACHE) {
+            WidgetFrame cached = FRAME_CACHE.get(key);
+            if (cached != null && !cached.bitmap.isRecycled()) return cached;
+        }
+        WidgetFrame rendered = renderInternal(
+                context, widthDp, heightDp, alarmMillis, false, settings);
+        synchronized (FRAME_CACHE) {
+            FRAME_CACHE.put(key, rendered);
+        }
+        return rendered;
     }
 
     private static WidgetFrame renderInternal(Context context, int widthDp, int heightDp,
@@ -145,35 +174,71 @@ final class WidgetRenderer {
         timePaint.setTextSize(timeSize);
         secondaryPaint.setTextSize(Math.max(1f, timeSize / 4f));
 
-        float timeHeight = time.isEmpty() ? 0 : -timePaint.ascent() + timePaint.descent();
-        float secondHeight = secondary.isEmpty() ? 0 : -secondaryPaint.ascent() + secondaryPaint.descent();
         float gap = secondaryTopMargin;
-        float total = timeHeight + gap + secondHeight;
         int alignment = settings.alignment;
         int vertical = alignment / 3;
         int horizontal = alignment % 3;
-        float top = vertical == 0 ? 0f : vertical == 1 ? (height - total) / 2f : height - total;
         float x = horizontal == 0 ? horizontalPadding : horizontal == 1 ? width / 2f : width - horizontalPadding;
         Paint.Align align = horizontal == 0 ? Paint.Align.LEFT : horizontal == 1 ? Paint.Align.CENTER : Paint.Align.RIGHT;
         timePaint.setTextAlign(align);
         secondaryPaint.setTextAlign(align);
-        float y = top - timePaint.ascent();
+
+        // Align using the glyph pixels that are actually visible. Font ascent/descent includes
+        // generous invisible padding, which previously made top and centre look identical.
+        float timeBaseline = time.isEmpty() ? 0f : -timePaint.ascent();
+        float secondaryBaseline;
         if (!time.isEmpty()) {
-            if (drawTime) canvas.drawText(time, x, y, timePaint);
-            y += timePaint.descent() + gap - secondaryPaint.ascent();
+            secondaryBaseline = timeBaseline + timePaint.descent()
+                    + gap - secondaryPaint.ascent();
         }
-        else y = top - secondaryPaint.ascent();
+        else secondaryBaseline = -secondaryPaint.ascent();
+
+        if (!secondary.isEmpty()) {
+            secondaryBaseline -= (drawTime ? 4.0f : 14.6f) * density;
+        }
+
+        Rect bounds = new Rect();
+        float visibleTop = Float.MAX_VALUE;
+        float visibleBottom = -Float.MAX_VALUE;
+        if (!time.isEmpty()) {
+            timePaint.getTextBounds(time, 0, time.length(), bounds);
+            visibleTop = Math.min(visibleTop, timeBaseline + bounds.top);
+            visibleBottom = Math.max(visibleBottom, timeBaseline + bounds.bottom);
+        }
+        if (!secondary.isEmpty()) {
+            secondaryPaint.getTextBounds(secondary, 0, secondary.length(), bounds);
+            visibleTop = Math.min(visibleTop, secondaryBaseline + bounds.top);
+            visibleBottom = Math.max(visibleBottom, secondaryBaseline + bounds.bottom);
+        }
+        if (visibleTop == Float.MAX_VALUE) {
+            visibleTop = 0f;
+            visibleBottom = 0f;
+        }
+        float shadowInset = settings.shadow ? 4f * density : 0f;
+        float visibleHeight = visibleBottom - visibleTop;
+        float targetTop = vertical == 0 ? shadowInset
+                : vertical == 1 ? (height - visibleHeight) / 2f
+                : height - visibleHeight - shadowInset;
+        float shift = targetTop - visibleTop;
+        timeBaseline += shift;
+        secondaryBaseline += shift;
+
+        if (!time.isEmpty() && drawTime) {
+            canvas.drawText(time, x, timeBaseline, timePaint);
+        }
 
         if (!secondary.isEmpty()) {
             // Calibrated from One UI's actual 235.37778 x 97.77778 widget area
             // and 2.8125 display density, rather than the nominal grid size.
             // The settings preview in the original APK uses the layout's natural
             // line spacing. The installed widget needs the calibrated overlap.
-            y -= (drawTime ? 4.0f : 14.6f) * density;
             drawSecondary(context, canvas, leading, separator, alarmIcon, alarm,
-                    x + 1.4f * density, y, secondaryPaint, align);
+                    x + 1.4f * density, secondaryBaseline, secondaryPaint, align);
         }
-        return new WidgetFrame(bitmap, timeSize / density, top / density, settings.timeColor, alignment,
+        float textClockTopBaseline = -timePaint.ascent();
+        float timeTranslation = timeBaseline - textClockTopBaseline;
+        return new WidgetFrame(bitmap, timeSize / density, timeTranslation / density,
+                settings.timeColor, alignment,
                 !time.isEmpty(), timePattern, zone.getID(), timeSize / (4f * density), date, alarm);
     }
 

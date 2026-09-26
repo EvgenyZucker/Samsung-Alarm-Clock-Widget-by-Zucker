@@ -4,6 +4,7 @@
 .android-user/
 build/
 app/build/
+app/release/
 **/build/
 
 # IDE files

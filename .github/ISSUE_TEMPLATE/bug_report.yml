@@ -1,0 +1,150 @@
+name: Bug report
+description: Report a reproducible problem with the application or widget
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve Samsung Alarm Clock Widget by Zucker.
+
+        Before submitting, please review the README troubleshooting section. Do not include passwords, signing files, device serial numbers, personal alarm labels, or unrelated `dumpsys` output.
+
+  - type: input
+    id: app_version
+    attributes:
+      label: Application version
+      description: Open About and legal in the application to find the version.
+      placeholder: "1.2.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation_type
+    attributes:
+      label: Installation type
+      options:
+        - Fresh installation
+        - Updated over version 1.1 or newer
+        - Migrated from version 1.0 after uninstalling it
+        - Other or unknown
+    validations:
+      required: true
+
+  - type: input
+    id: device_model
+    attributes:
+      label: Samsung device model
+      placeholder: Samsung Galaxy S25 FE / SM-S731B
+    validations:
+      required: true
+
+  - type: input
+    id: android_version
+    attributes:
+      label: Android version
+      placeholder: Android version shown in Settings
+    validations:
+      required: true
+
+  - type: input
+    id: one_ui_version
+    attributes:
+      label: One UI version
+      placeholder: One UI 8.5
+    validations:
+      required: true
+
+  - type: input
+    id: clock_version
+    attributes:
+      label: Samsung Clock version
+      description: Find it under Settings → Apps → Clock → About Clock or App details.
+      placeholder: Version number, if available
+    validations:
+      required: true
+
+  - type: dropdown
+    id: dump_permission
+    attributes:
+      label: DUMP permission status
+      description: Check the Permissions section inside the application.
+      options:
+        - Granted
+        - Not granted
+        - Unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: usage_permission
+    attributes:
+      label: Usage access status
+      description: Check the Permissions section inside the application.
+      options:
+        - Granted
+        - Not granted
+        - Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem description
+      description: Explain what happened and whether the problem affects the widget, settings, permissions, launcher icon, or Samsung Clock integration.
+      placeholder: Describe the problem clearly and concisely.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open ...
+        2. Change ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: What happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alarm_context
+    attributes:
+      label: Alarm context
+      description: If relevant, describe whether the alarm is enabled, repeating, several days ahead, or accompanied by Modes and Routines events. Do not include private alarm labels.
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Screenshots or focused diagnostic output
+      description: Attach screenshots or only the minimum relevant output. Remove device serial numbers, personal data, and unrelated system information.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I checked the README troubleshooting section.
+          required: true
+        - label: I confirmed that the alarm was created in Samsung Clock, not a third-party clock application.
+          required: true
+        - label: I removed passwords, signing material, device serial numbers, and personal information from this report.
+          required: true

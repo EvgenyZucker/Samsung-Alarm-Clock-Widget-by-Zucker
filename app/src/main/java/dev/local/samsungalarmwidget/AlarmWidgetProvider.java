@@ -31,6 +31,8 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
             "dev.local.samsungalarmwidget.ALARM_VERIFY";
     private static final long DATE_REFRESH_WINDOW_MS = 15L * 60L * 1000L;
     private static final long ALARM_VERIFY_INTERVAL_MS = 60_000L;
+    private static final long ALARM_CHANGE_INITIAL_DELAY_MS = 600L;
+    private static final long ALARM_CHANGE_CONFIRM_DELAY_MS = 4_000L;
     private static final ThreadPoolExecutor EXECUTOR = createExecutor();
     private static final Object UPDATE_LOCK = new Object();
     private static boolean updateQueued;
@@ -54,8 +56,19 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
         EXECUTOR.execute(() -> {
             try {
                 boolean refreshAlarm = shouldRefreshAlarm(action);
-                if (refreshAlarm && isAlarmChangeAction(action)) SystemClock.sleep(600L);
-                if (updateAll(appContext, refreshAlarm)) scheduleRefreshes(appContext);
+                boolean hasWidgets;
+                if (refreshAlarm && isAlarmChangeAction(action)) {
+                    // Samsung Clock can publish NEXT_ALARM_CLOCK_CHANGED before its distant
+                    // recurring alarm has appeared in AlarmManager. Render the quick result,
+                    // then confirm once after Samsung has finished updating its alarm entries.
+                    SystemClock.sleep(ALARM_CHANGE_INITIAL_DELAY_MS);
+                    hasWidgets = updateAll(appContext, true);
+                    SystemClock.sleep(ALARM_CHANGE_CONFIRM_DELAY_MS);
+                    hasWidgets = updateAll(appContext, true) || hasWidgets;
+                } else {
+                    hasWidgets = updateAll(appContext, refreshAlarm);
+                }
+                if (hasWidgets) scheduleRefreshes(appContext);
                 else cancelRefreshes(appContext);
             } finally {
                 result.finish();
@@ -143,7 +156,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
         if (!showAlarm) return null;
         AlarmStateCache cache = new AlarmStateCache(context);
         if (refreshAlarm) {
-            AlarmReader.Result result = AlarmReader.read();
+            AlarmReader.Result result = AlarmReader.read(context);
             storeAlarmResult(cache, result, true);
         }
         return cache.get();
@@ -175,8 +188,9 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
             views.setInt(R.id.widget_clock, "setGravity", gravity);
             float density = context.getResources().getDisplayMetrics().density;
             int sidePadding = Math.round(8f * density);
-            int topPadding = Math.max(0, Math.round(frame.timeTopDp * density));
-            views.setViewPadding(R.id.widget_clock, sidePadding, topPadding, sidePadding, 0);
+            views.setViewPadding(R.id.widget_clock, sidePadding, 0, sidePadding, 0);
+            views.setFloat(R.id.widget_clock, "setTranslationY",
+                    frame.timeTranslationDp * density);
         }
         if (click != null) {
             views.setOnClickPendingIntent(R.id.widget_root, click);
@@ -207,16 +221,18 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
         return AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action)
                 || AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED.equals(action)
                 || Intent.ACTION_BOOT_COMPLETED.equals(action)
+                || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)
                 || Intent.ACTION_TIME_CHANGED.equals(action)
                 || Intent.ACTION_TIMEZONE_CHANGED.equals(action)
                 || Intent.ACTION_DATE_CHANGED.equals(action)
-                || AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED.equals(action);
+                || isAlarmChangeAction(action);
     }
 
     private static boolean shouldRefreshAlarm(String action) {
         return AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action)
                 || Intent.ACTION_BOOT_COMPLETED.equals(action)
-                || AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED.equals(action);
+                || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)
+                || isAlarmChangeAction(action);
     }
 
     private static boolean isAlarmChangeAction(String action) {
@@ -237,22 +253,24 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
         }
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         if (powerManager != null && !powerManager.isInteractive()) {
-            scheduleAlarmVerification(context);
+            // This is a non-wakeup alarm: while the device sleeps it does not wake the CPU.
+            // When delivery is deferred until the device becomes interactive, the next pass
+            // performs one real alarm read. If delivery happens during another background wake,
+            // only this inexpensive state check runs and dumpsys remains disabled.
+            scheduleAlarmVerification(context, ALARM_VERIFY_INTERVAL_MS);
             return;
         }
         AlarmStateCache cache = new AlarmStateCache(context);
         Long previous = cache.get();
-        AlarmReader.Result result = AlarmReader.read();
+        AlarmReader.Result result = AlarmReader.read(context);
         Long current = storeAlarmResult(cache, result, false);
         if (!same(previous, current)) updateAll(context, false);
-        scheduleAlarmVerification(context);
+        scheduleAlarmVerification(context, ALARM_VERIFY_INTERVAL_MS);
     }
 
     private static Long storeAlarmResult(AlarmStateCache cache, AlarmReader.Result result,
                                          boolean logFailure) {
-        boolean noAlarm = result.triggerMillis == null && result.error != null
-                && result.error.startsWith("Активный Samsung Alarm не найден");
-        if (result.triggerMillis != null || noAlarm) {
+        if (result.triggerMillis != null || result.noAlarm) {
             cache.put(result.triggerMillis);
         } else if (logFailure && result.error != null) {
             Log.w(TAG, "Unable to refresh alarm: " + result.error);
@@ -266,13 +284,13 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
 
     private static void scheduleRefreshes(Context context) {
         WidgetSettings.Snapshot settings = new WidgetSettings(context).snapshot();
-        if (settings.showDate || settings.showAlarm || !"auto".equals(settings.timezone)) {
-            scheduleDateRefresh(context);
+        if (settings.showDate) {
+            scheduleDateRefresh(context, settings.timezone);
         } else {
             cancelDateRefresh(context);
         }
         if (settings.showAlarm) {
-            scheduleAlarmVerification(context);
+            scheduleAlarmVerification(context, ALARM_VERIFY_INTERVAL_MS);
         } else {
             cancelAlarmVerification(context);
         }
@@ -287,10 +305,12 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
         return value > 0 ? value : fallback;
     }
 
-    private static void scheduleDateRefresh(Context context) {
+    private static void scheduleDateRefresh(Context context, String timezone) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (manager == null) return;
-        Calendar nextDay = Calendar.getInstance();
+        java.util.TimeZone zone = "auto".equals(timezone)
+                ? java.util.TimeZone.getDefault() : java.util.TimeZone.getTimeZone(timezone);
+        Calendar nextDay = Calendar.getInstance(zone);
         nextDay.add(Calendar.DAY_OF_YEAR, 1);
         nextDay.set(Calendar.HOUR_OF_DAY, 0);
         nextDay.set(Calendar.MINUTE, 0);
@@ -305,11 +325,11 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
         if (manager != null) manager.cancel(dateRefreshIntent(context));
     }
 
-    private static void scheduleAlarmVerification(Context context) {
+    private static void scheduleAlarmVerification(Context context, long delayMillis) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (manager == null) return;
         manager.set(AlarmManager.ELAPSED_REALTIME,
-                SystemClock.elapsedRealtime() + ALARM_VERIFY_INTERVAL_MS,
+                SystemClock.elapsedRealtime() + delayMillis,
                 alarmVerificationIntent(context));
     }
 

@@ -1,6 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Samsung Alarm Clock Widget by Zucker</string>
-    <string name="widget_description">Настраиваемые цифровые часы с настоящим будильником Samsung</string>
-    <string name="developer_name">EvgenyZucker</string>
+    <string name="app_name" translatable="false">Samsung Alarm Clock Widget by Zucker</string>
+    <string name="launcher_name">Alarm Widget</string>
+    <string name="widget_description">Customizable digital clock with the actual next Samsung alarm</string>
+    <string name="preview_time" translatable="false">10:08</string>
+    <string name="preview_alarm">Mon 09:50</string>
+    <string name="developer_name" translatable="false">EvgenyZucker</string>
+    <string name="repository_url" translatable="false">https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker</string>
+    <string name="apache_license_url" translatable="false">https://www.apache.org/licenses/LICENSE-2.0</string>
+    <string name="section_general">General</string>
+    <string name="section_time">Time appearance</string>
+    <string name="section_date">Date appearance</string>
+    <string name="section_permissions">Permissions</string>
+    <string name="section_about">About</string>
+    <string name="tap_widget">Tap the widget</string>
+    <string name="background_color">Background color</string>
+    <string name="choose_background_color">Choose the background color</string>
+    <string name="text_alignment">Text alignment</string>
+    <string name="text_shadow">Text shadow</string>
+    <string name="text_shadow_summary">Show a shadow behind the clock text</string>
+    <string name="font">Font</string>
+    <string name="font_size">Font size</string>
+    <string name="percent_value" translatable="false">%1$d%%</string>
+    <string name="show_alarm">Show alarm or events</string>
+    <string name="show_alarm_summary">Show the next alarm or calendar event time</string>
+    <string name="set_alarm">Set an alarm</string>
+    <string name="show_time">Show time</string>
+    <string name="time_color">Time color</string>
+    <string name="choose_time_color">Choose the clock color</string>
+    <string name="time_format">Time format</string>
+    <string name="time_zone">Time zone</string>
+    <string name="show_date">Show date</string>
+    <string name="date_color">Date color</string>
+    <string name="choose_date_color">Choose the date color</string>
+    <string name="date_format">Date format</string>
+    <string name="about_legal">About and legal</string>
+    <string name="about_legal_summary">Version, repository and licenses</string>
+    <string name="permissions_ready">Required permissions are available</string>
+    <string name="permissions_missing">ADB permissions are missing</string>
+    <string name="permissions_missing_summary">The widget cannot reliably read the next Samsung alarm. Tap for instructions.</string>
+    <string name="check_permissions">Check permissions</string>
+    <string name="check_permissions_summary">View current access status</string>
+    <string name="permission_status_title">Permission status</string>
+    <string name="permission_granted">Granted</string>
+    <string name="permission_not_granted">Not granted</string>
+    <string name="permission_dump_name">Read alarm diagnostics (DUMP)</string>
+    <string name="permission_usage_name">Usage access</string>
+    <string name="permission_status_line">%1$s: %2$s</string>
+    <string name="permission_instructions_title">Grant permissions with ADB</string>
+    <string name="open_adb_instructions">ADB instructions</string>
+    <string name="permission_instructions_intro">Connect the phone to a computer with USB debugging enabled, authorize the computer on the phone, then run:</string>
+    <string name="permission_commands" translatable="false">adb shell pm grant dev.local.samsungalarmwidget android.permission.DUMP\nadb shell pm grant dev.local.samsungalarmwidget android.permission.PACKAGE_USAGE_STATS</string>
+    <string name="permission_instructions_after">Return to this screen and tap Check permissions. Regrant the permissions after reinstalling the app.</string>
+    <string name="copy_commands">Copy commands</string>
+    <string name="commands_copied">ADB commands copied</string>
+    <string name="close">Close</string>
+    <string name="alignment_top_start">Top start</string>
+    <string name="alignment_top">Top</string>
+    <string name="alignment_top_end">Top end</string>
+    <string name="alignment_start">Start</string>
+    <string name="alignment_center">Center</string>
+    <string name="alignment_end">End</string>
+    <string name="alignment_bottom_start">Bottom start</string>
+    <string name="alignment_bottom">Bottom</string>
+    <string name="alignment_bottom_end">Bottom end</string>
+    <string-array name="alignment_names">
+        <item>@string/alignment_top_start</item><item>@string/alignment_top</item><item>@string/alignment_top_end</item>
+        <item>@string/alignment_start</item><item>@string/alignment_center</item><item>@string/alignment_end</item>
+        <item>@string/alignment_bottom_start</item><item>@string/alignment_bottom</item><item>@string/alignment_bottom_end</item>
+    </string-array>
+    <string-array name="font_names" translatable="false"><item>Pro</item><item>Regular</item><item>Light</item><item>Medium</item><item>Condensed</item><item>Classic</item></string-array>
+    <string-array name="time_format_examples" translatable="false"><item>8:43</item><item>8:43 PM</item><item>20:43</item></string-array>
+    <string name="cancel">Cancel</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="automatic">Automatic</string>
+    <string name="applications">Applications</string>
+    <string name="shortcuts">Shortcuts</string>
+    <string name="do_nothing">Do nothing</string>
+    <string name="open_clock">Open Samsung Clock</string>
+    <string name="clock_not_found">Samsung Clock could not be opened</string>
+    <string name="back">Back</string>
+    <string name="selected">Selected</string>
+    <string name="switch_on">On</string>
+    <string name="switch_off">Off</string>
+    <string name="color_value">Color %1$s</string>
+    <string name="slider_value">%1$d percent</string>
+    <string name="color_picker_value">Color picker. Current value %1$s. Swipe up or down to adjust the hue.</string>
+    <string name="date_weekday">Weekday</string>
+    <string name="date_day">Date</string>
+    <string name="date_year">Year</string>
+    <string name="date_month">Month</string>
+    <string name="date_numbers_only">Numbers only</string>
+    <string name="date_show">Show</string>
+    <string name="date_abbreviation">Abbreviation</string>
+    <string name="date_format_group">Format</string>
+    <string name="date_advanced">Advanced</string>
+    <string name="date_pattern_help">Date and time formats use Unicode date pattern strings. Full syntax: https://unicode.org/reports/tr35/tr35-dates.html</string>
+    <string name="about_title">About and legal</string>
+    <string name="version_label">Version %1$s</string>
+    <string name="developer_label">Developer</string>
+    <string name="repository">Source code and support</string>
+    <string name="repository_summary">Open the project repository on GitHub</string>
+    <string name="project_license">Project license</string>
+    <string name="project_license_summary">Apache License 2.0</string>
+    <string name="third_party_licenses">Third-party notices</string>
+    <string name="third_party_summary">Google Material Icons and Material Symbols — Apache License 2.0</string>
+    <string name="independent_project_notice">Independent, unofficial project. Not affiliated with or endorsed by Samsung, Maize, EZI Studio or Google.</string>
+    <string name="open_link_failed">No application is available to open this link</string>
+    <string name="alarm_error_exit">dumpsys alarm exited with code %1$d\n%2$s</string>
+    <string name="alarm_no_matches">No clockpackage matches were found. Output start:\n%1$s</string>
+    <string name="alarm_related_lines">Related lines found:\n%1$s</string>
+    <string name="alarm_not_found">No active Samsung alarm was found\n\n%1$s</string>
+    <string name="alarm_error_exception">%1$s: %2$s</string>
 </resources>

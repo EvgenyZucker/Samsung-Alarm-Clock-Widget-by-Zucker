@@ -4,6 +4,49 @@ All notable changes to Samsung Alarm Clock Widget by Zucker are documented in th
 
 The project follows a simple incremental versioning scheme. Version 1.1 is the first release signed with the permanent production key.
 
+## [Unreleased]
+
+- Fixed text alignment in the installed widget using the visible glyph bounds so all nine
+  positions match the settings preview; centered content now has equal visible margins.
+- Reduced background work by using system alarm-change events with a one-minute fallback check,
+  skipping alarm reads while the screen is off, avoiding unchanged cache writes and reusing
+  rendered widget frames. The non-wakeup fallback resumes the real check after the device wakes.
+- Reduced the cost of parsing Samsung alarm diagnostics without changing alarm-selection rules.
+- Limited midnight refresh scheduling to widgets that display a date.
+- Added a delayed confirmation read after Samsung Clock change events because One UI can
+  announce a distant recurring alarm several seconds before registering its final alarm entry.
+- Documented and rejected Samsung-specific alarm events: Clock's widget event is package-scoped,
+  while One UI's global event is blocked for background manifest receivers. The widget therefore
+  keeps Android's standard event plus its non-wakeup verification fallback.
+- Refresh the cached alarm after an in-place app update to prevent a pre-update value from
+  remaining visible until the next scheduled verification.
+
+### Added
+
+- Added a complete adaptive launcher icon with round and monochrome themed variants.
+- Added a native widget preview for supported launchers.
+- Added English and Russian resources with per-app language selection.
+- Added an About and legal screen with version, repository and licensing links.
+- Added in-app status checks, warnings and copyable ADB instructions for the required permissions.
+- Added the Apache License 2.0 and third-party notices for Google Material Icons and Material Symbols.
+- Added GitHub Issue Forms for bug reports and compatibility reports.
+- Added a read-only GitHub Actions workflow for linting, unit tests and debug builds without production-signing secrets.
+
+### Changed
+
+- Replaced the alarm font with a subset generated from the current official Google Material Symbols source.
+- Updated Material icon resources from the official source.
+- Improved accessibility descriptions, keyboard and TalkBack behavior, text contrast and large-font layouts.
+- Added a shorter launcher label while retaining the full project name in About and widget metadata.
+- Made the no-alarm result independent of localized diagnostic text without changing the alarm-selection algorithm.
+
+### Verified
+
+- Verified Russian and English interfaces on a Samsung Galaxy S25 FE running One UI 8.5.
+- Verified the adaptive and monochrome launcher icons, native widget preview and maximum system font size.
+- Verified missing-permission warnings, permission restoration and preservation after an in-place update.
+- Verified repository, license and third-party notice links, Samsung Clock launching and widget refresh after changing an alarm.
+
 ## [1.1] - 2026-09-26
 
 ### Changed

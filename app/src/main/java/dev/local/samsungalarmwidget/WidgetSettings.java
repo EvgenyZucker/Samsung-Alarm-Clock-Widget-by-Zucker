@@ -3,7 +3,6 @@ package dev.local.samsungalarmwidget;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.view.Gravity;
 
 final class WidgetSettings {
     static final String PREFS = "digital_clock_settings";
@@ -107,25 +106,15 @@ final class WidgetSettings {
             this.numericDate = numericDate;
             this.timezone = timezone;
         }
-    }
 
-    int gravity() {
-        switch (integer(KEY_ALIGNMENT, 1)) {
-            case 0: return Gravity.TOP | Gravity.START;
-            case 1: return Gravity.TOP | Gravity.CENTER_HORIZONTAL;
-            case 2: return Gravity.TOP | Gravity.END;
-            case 3: return Gravity.CENTER_VERTICAL | Gravity.START;
-            case 4: return Gravity.CENTER;
-            case 5: return Gravity.CENTER_VERTICAL | Gravity.END;
-            case 6: return Gravity.BOTTOM | Gravity.START;
-            case 7: return Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-            default: return Gravity.BOTTOM | Gravity.END;
+        String renderKey() {
+            return alignment + "|" + font + "|" + fontSize + "|" + timeFormat + "|"
+                    + showTime + "|" + showAlarm + "|" + showDate + "|" + shadow + "|"
+                    + timeColor + "|" + dateColor + "|" + backgroundColor + "|"
+                    + dateWeekday + "|" + dateDay + "|" + dateYear + "|"
+                    + shortWeekday + "|" + shortMonth + "|" + shortYear + "|"
+                    + numericDate + "|" + timezone;
         }
-    }
-
-    int textGravity() {
-        int alignment = integer(KEY_ALIGNMENT, 1) % 3;
-        return alignment == 0 ? Gravity.START : alignment == 1 ? Gravity.CENTER_HORIZONTAL : Gravity.END;
     }
 
     int timeColor() { return integer(KEY_TIME_COLOR, Color.WHITE); }

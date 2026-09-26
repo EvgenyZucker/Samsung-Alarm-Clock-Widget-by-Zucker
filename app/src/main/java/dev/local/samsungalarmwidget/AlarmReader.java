@@ -1,5 +1,6 @@
 package dev.local.samsungalarmwidget;
 
+import android.content.Context;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -16,12 +17,13 @@ final class AlarmReader {
     static final class Result {
         final Long triggerMillis;
         final String error;
-        Result(Long triggerMillis, String error) { this.triggerMillis = triggerMillis; this.error = error; }
+        final boolean noAlarm;
+        Result(Long triggerMillis, String error, boolean noAlarm) { this.triggerMillis = triggerMillis; this.error = error; this.noAlarm = noAlarm; }
     }
 
     private AlarmReader() {}
 
-    static Result read() {
+    static Result read(Context context) {
         Process process = null;
         try {
             // Keep the command and timestamp parsing identical to the proven 0.6 build.
@@ -50,7 +52,9 @@ final class AlarmReader {
                     }
                     recentLines.addLast(line);
                     while (recentLines.size() > 3) recentLines.removeFirst();
-                    if (ALARM_HEADER.matcher(line).matches()) {
+                    boolean possibleHeader = line.indexOf('#') >= 0
+                            && (line.contains("RTC") || line.contains("ELAPSED"));
+                    if (possibleHeader && ALARM_HEADER.matcher(line).matches()) {
                         if (inAlarmBlock && samsung && explicit && blockTime != null
                                 && blockTime > now && blockTime < best) best = blockTime;
                         inAlarmBlock = true;
@@ -72,22 +76,23 @@ final class AlarmReader {
             if (inAlarmBlock && samsung && explicit && blockTime != null
                     && blockTime > now && blockTime < best) best = blockTime;
             int exit = process.waitFor();
-            if (exit != 0) return new Result(null, "dumpsys alarm завершился с кодом " + exit + "\n" + diagnostics);
+            if (exit != 0) return new Result(null, context.getString(R.string.alarm_error_exit,exit,diagnostics), false);
             if (best == Long.MAX_VALUE) {
                 String detail = clockDiagnostics.length() == 0
-                        ? "Совпадений clockpackage в выводе нет. Начало вывода:\n" + diagnostics
-                        : "Найдены связанные строки:\n" + clockDiagnostics;
-                return new Result(null, "Активный Samsung Alarm не найден\n\n" + detail);
+                        ? context.getString(R.string.alarm_no_matches,diagnostics)
+                        : context.getString(R.string.alarm_related_lines,clockDiagnostics);
+                return new Result(null, context.getString(R.string.alarm_not_found,detail), true);
             }
-            return new Result(best, null);
+            return new Result(best, null, false);
         } catch (Exception e) {
-            return new Result(null, e.getClass().getSimpleName() + ": " + e.getMessage());
+            return new Result(null, context.getString(R.string.alarm_error_exception,e.getClass().getSimpleName(),e.getMessage()), false);
         } finally {
             if (process != null) process.destroy();
         }
     }
 
     private static Long extractTime(String line) {
+        if (line.indexOf("origWhen") < 0) return null;
         Matcher matcher = ORIG_WHEN.matcher(line);
         if (!matcher.find()) return null;
         try {
