@@ -18,9 +18,9 @@ Unlike widgets that rely only on Android's standard `getNextAlarmClock()` result
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/widget-home-screen.png" width="220" alt="Widget displaying the current time and next Samsung Clock alarm on the One UI home screen">
+  <img src="docs/screenshots/widget-home-screen.png?v=2" width="220" alt="Widget displaying the current time and next Samsung Clock alarm on the One UI home screen">
   &nbsp;
-  <img src="docs/screenshots/widget-reconfigure-menu.png" width="220" alt="One UI widget menu with the option to reopen the widget settings">
+  <img src="docs/screenshots/widget-reconfigure-menu.png?v=2" width="220" alt="One UI widget menu with the option to reopen the widget settings">
   &nbsp;
   <img src="docs/screenshots/settings-overview.png" width="220" alt="Main widget appearance and behavior settings">
 </p>
