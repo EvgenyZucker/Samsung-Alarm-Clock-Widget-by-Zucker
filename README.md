@@ -1,7 +1,7 @@
 # Samsung Alarm Clock Widget by Zucker
 
 [![Download APK](https://img.shields.io/badge/Download-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest/download/Samsung-Alarm-Clock-Widget-by-Zucker-v1.2.0.apk)
-[![Latest release](https://img.shields.io/github/v/release/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker?style=for-the-badge&label=Latest%20release)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest)
+[![Latest release: v1.2.0](https://img.shields.io/badge/Latest%20release-v1.2.0-0969DA?style=for-the-badge)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/tag/v1.2.0)
 [![Android CI](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml/badge.svg)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml)
 
 [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Support](#support-and-feedback)
