@@ -4,7 +4,7 @@ All notable changes to Samsung Alarm Clock Widget by Zucker are documented in th
 
 The project follows a simple incremental versioning scheme. Version 1.1 is the first release signed with the permanent production key.
 
-## [Unreleased]
+## [1.2.0] - 2026-09-26
 
 - Fixed text alignment in the installed widget using the visible glyph bounds so all nine
   positions match the settings preview; centered content now has equal visible margins.
@@ -31,6 +31,8 @@ The project follows a simple incremental versioning scheme. Version 1.1 is the f
 - Added the Apache License 2.0 and third-party notices for Google Material Icons and Material Symbols.
 - Added GitHub Issue Forms for bug reports and compatibility reports.
 - Added a read-only GitHub Actions workflow for linting, unit tests and debug builds without production-signing secrets.
+- Added a screenshot gallery, contribution guidelines, a security policy and clearer support links.
+- Enabled private vulnerability reporting for responsible security disclosures.
 
 ### Changed
 
@@ -46,6 +48,7 @@ The project follows a simple incremental versioning scheme. Version 1.1 is the f
 - Verified the adaptive and monochrome launcher icons, native widget preview and maximum system font size.
 - Verified missing-permission warnings, permission restoration and preservation after an in-place update.
 - Verified repository, license and third-party notice links, Samsung Clock launching and widget refresh after changing an alarm.
+- Verified the production-signed 1.2.0 APK as an in-place update over version 1.1 with the widget, settings and ADB permissions preserved.
 
 ## [1.1] - 2026-09-26
 

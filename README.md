@@ -1,6 +1,6 @@
 # Samsung Alarm Clock Widget by Zucker
 
-[![Download APK](https://img.shields.io/badge/Download-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest/download/Samsung-Alarm-Clock-Widget-by-Zucker-v1.1.apk)
+[![Download APK](https://img.shields.io/badge/Download-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest/download/Samsung-Alarm-Clock-Widget-by-Zucker-v1.2.0.apk)
 [![Latest release](https://img.shields.io/github/v/release/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker?style=for-the-badge&label=Latest%20release)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest)
 [![Android CI](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml/badge.svg)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml)
 
@@ -203,7 +203,7 @@ The application also shows the current permission state under **Permissions**. I
 Install a new APK over the existing application. Do not uninstall the old version first. Updating in place preserves the ADB permissions; uninstalling the application removes them and requires the setup commands to be run again.
 
 > [!WARNING]
-> Version 1.0 was distributed with a temporary debug signature. To migrate from public version 1.0 to version 1.1, uninstall version 1.0 once, install version 1.1, and grant the ADB permissions again. Starting with version 1.1, releases use a permanent production signing key and future updates can be installed in place.
+> Version 1.0 was distributed with a temporary debug signature. To migrate from public version 1.0, uninstall version 1.0 once, install the latest release, and grant the ADB permissions again. Starting with version 1.1, releases use a permanent production signing key and can be updated in place.
 
 ## Compatibility
 
