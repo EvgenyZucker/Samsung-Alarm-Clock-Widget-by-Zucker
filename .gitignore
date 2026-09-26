@@ -21,7 +21,7 @@ work/
 reference/
 
 # Preserved APK backups and checksums are kept locally, not in source control
-releases/
+/releases/
 
 # Signing material and generated packages
 keystore.properties
