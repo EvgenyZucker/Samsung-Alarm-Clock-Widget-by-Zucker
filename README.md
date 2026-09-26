@@ -4,7 +4,7 @@
 [![Latest release](https://img.shields.io/github/v/release/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker?style=for-the-badge&label=Latest%20release)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/latest)
 [![Android CI](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml/badge.svg)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml)
 
-[Changelog](CHANGELOG.md)
+[Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Support](#support-and-feedback)
 
 > [!IMPORTANT]
 > After installing the APK, two system permissions must be granted once through ADB. Root is not required, and the permissions survive normal phone restarts. Follow the [detailed installation and setup instructions](#detailed-installation-and-setup) below.
@@ -284,6 +284,16 @@ The widget works locally on the device.
 - It does not require an internet connection for normal operation.
 
 The `DUMP` and usage-statistics permissions are used only to locate and identify the next alarm scheduled by Samsung Clock.
+
+## Support and feedback
+
+- For installation and permission problems, start with [Troubleshooting](#troubleshooting).
+- To report a reproducible problem, use the [bug report form](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/issues/new?template=bug_report.yml).
+- To share a successful or unsuccessful device test, use the [compatibility report form](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/issues/new?template=compatibility_report.yml).
+- Before proposing code changes, read [CONTRIBUTING.md](CONTRIBUTING.md).
+- Report suspected vulnerabilities privately according to [SECURITY.md](SECURITY.md), not in a public issue.
+
+Please remove device serial numbers, private alarm labels, passwords, signing material and unrelated diagnostic output before posting screenshots or logs.
 
 ## Building from source
 
