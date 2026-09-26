@@ -6,7 +6,7 @@
 [![Последний релиз: v1.2.0](https://img.shields.io/badge/%D0%9F%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BD%D0%B8%D0%B9%20%D1%80%D0%B5%D0%BB%D0%B8%D0%B7-v1.2.0-0969DA?style=for-the-badge)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/releases/tag/v1.2.0)
 [![Android CI](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml/badge.svg)](https://github.com/EvgenyZucker/Samsung-Alarm-Clock-Widget-by-Zucker/actions/workflows/android-ci.yml)
 
-[История изменений](CHANGELOG.md) · [Участие в разработке](CONTRIBUTING.md) · [Безопасность](SECURITY.md) · [Поддержка](#поддержка-и-обратная-связь)
+[История изменений](CHANGELOG.ru.md) · [Участие в разработке](CONTRIBUTING.md) · [Безопасность](SECURITY.md) · [Поддержка](#поддержка-и-обратная-связь)
 
 > [!IMPORTANT]
 > После установки APK необходимо один раз выдать приложению два системных разрешения через ADB. Root не требуется, а разрешения сохраняются после обычной перезагрузки телефона. Следуйте [подробной инструкции по установке и настройке](#подробная-установка-и-настройка).

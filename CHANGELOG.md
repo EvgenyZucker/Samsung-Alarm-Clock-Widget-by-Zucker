@@ -1,5 +1,7 @@
 # Changelog
 
+> **Русскоязычным пользователям:** [история изменений на русском языке](CHANGELOG.ru.md)
+
 All notable changes to Samsung Alarm Clock Widget by Zucker are documented in this file.
 
 The project follows a simple incremental versioning scheme. Version 1.1 is the first release signed with the permanent production key.
